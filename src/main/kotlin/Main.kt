@@ -1,3 +1,16 @@
+/**
+ * =====================================================================
+ * Programming Project for NCEA Level 2, Standard 91896
+ * ---------------------------------------------------------------------
+ * Project Name:   MAZE GAME
+ * Project Author: Kieran Clark
+ * GitHub Repo:    https://github.com/Waimea-Krclark/level-2-programming-assessment
+ * ---------------------------------------------------------------------
+ * Notes:
+ * Procedurally generated top down maze game, player is controlled with WASD in a terminal GUI
+ * =====================================================================
+ */
+
 package org.example
 
 import com.varabyte.kotter.foundation.*
@@ -25,9 +38,21 @@ fun main() = session(){
     var screen = liveListOf<LiveList<String>>()
     screen.add(liveListOf(EDGE + HORIWALL.repeat(SCREENWIDTH) + EDGE) )
     repeat(SCREENHEIGHT){
-        screen.add(liveListOf(VERTWALL + EMPTY.repeat(SCREENWIDTH) + VERTWALL))
+        screen.add(liveListOf(VERTWALL))
+
     }
     screen.add(liveListOf(EDGE + HORIWALL.repeat(SCREENWIDTH) + EDGE) )
+
+    repeat(100){
+        val randomY = Random.nextInt(0, SCREENHEIGHT)
+        val randomX = Random.nextInt(0, SCREENWIDTH)
+        println(screen[1][0])
+       // if (screen[1][2] == EMPTY){
+//   screen[1][2] = HORIWALL
+       // }
+
+    }
+
 
     section {
         p{
@@ -36,7 +61,6 @@ fun main() = session(){
                     textLine(screenX)
                 }
             }
-
         }
     }.run {  }
 }
