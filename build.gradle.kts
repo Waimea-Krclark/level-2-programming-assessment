@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("com.varabyte.kotter:kotter:1.2.1")
 }
 
 tasks.test {
