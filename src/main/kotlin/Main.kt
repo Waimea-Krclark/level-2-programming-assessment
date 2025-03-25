@@ -21,6 +21,8 @@ import com.varabyte.kotter.foundation.input.*
 import com.varabyte.kotter.foundation.text.*
 import com.varabyte.kotter.foundation.collections.liveListOf
 import com.varabyte.kotter.foundation.timer.*
+import com.varabyte.kotter.runtime.Session
+import com.varabyte.kotter.runtime.render.RenderScope
 import java.awt.Event.ESCAPE
 import java.awt.desktop.QuitEvent
 import kotlin.concurrent.thread
@@ -28,12 +30,15 @@ import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
 //Constant variable declarations
-const val SCREENHEIGHT = 15
-const val SCREENWIDTH = 15
-const val EMPTY = ". "
-const val PLAYER = "@ "
+const val SCREENHEIGHT = 30
+const val SCREENWIDTH = 30
+const val EMPTY = "  "
+const val PLAYER = "O "
 const val DOOR = "D "
 const val WALL = "# "
+// Global variables
+var playerY = 0
+var playerX = 0
 
 //Main Function
 fun main() = session(){
@@ -42,6 +47,55 @@ fun main() = session(){
     var screen = liveListOf<LiveList<String>>()
 
     //Builds the screen
+    buildScreen(screen=screen)
+    //Builds the maze and adds the player to the bottom
+    generateMaze(screen=screen)
+    placePlayer(screen=screen)
+    var (doorY,doorX) = placeDoor(screen=screen)
+
+    section {
+        p{
+            //for every tile in every row, prints the tile, and colours specific tiles (i.e green tile for player)
+            for (screenY in screen){
+                for (screenX in screenY){
+                    if (screenX == PLAYER){
+                        cyan{
+                            text(screenX)
+                        }
+                    }
+                    else if (screenX == DOOR){
+                        green{
+                            text(screenX)
+                        }
+                    }
+                    else{
+                        magenta {
+                            text(screenX)
+                        }
+                    }
+                }
+                //New Line
+                textLine()
+            }
+        }
+    }.runUntilSignal {
+        //Run until signal creates a looped script that will run until the Signal() function is called, similar to a While loop
+        var canMove = true
+        //Movement script
+        onKeyPressed {
+            when(key){
+                Keys.W -> movePlayer(screen=screen, moveX=playerX, moveY=playerY-1)
+                Keys.S -> movePlayer(screen=screen, moveX=playerX, moveY=playerY+1)
+                Keys.A -> movePlayer(screen=screen, moveX=playerX-1, moveY=playerY)
+                Keys.D -> movePlayer(screen=screen, moveX=playerX+1, moveY=playerY)
+            }
+            //Draws to player to its coordinates
+            screen[playerY][playerX] = PLAYER
+        }
+    }
+}
+
+fun Session.buildScreen(screen: LiveList<LiveList<String>>){
     screen.add(liveListOf(WALL + WALL.repeat(SCREENWIDTH) + WALL))
     var xCount = 1
     repeat(SCREENHEIGHT){
@@ -55,60 +109,11 @@ fun main() = session(){
     }
     screen.add(liveListOf(WALL + WALL.repeat(SCREENWIDTH) + WALL) )
 
-    //Builds the maze and adds the player to the bottom
-    generateMaze(screen=screen)
-    var (playerY,playerX) = placePlayer(screen=screen)
-
-    section {
-        p{
-            //for every tile in every row, prints the tile, and colours specific tiles (i.e green tile for player)
-            for (screenY in screen){
-                for (screenX in screenY){
-                    if (screenX == PLAYER){
-                        green{
-                            text(screenX)
-                        }
-                    }
-                    else{
-                        text(screenX)
-                    }
-                }
-                //New Line
-                textLine()
-            }
-        }
-    }.runUntilSignal {
-        //Run until signal creates a looped script that will run until the Signal() function is called, similar to a While loop
-        var canMove = true
-        //Movement script
-        onKeyPressed {
-            when(key){
-                Keys.W -> if (screen[playerY-1][playerX] == EMPTY){
-                    playerY = playerY-1
-                    screen[playerY+1][playerX] = EMPTY
-                }
-                Keys.S -> if (screen[playerY+1][playerX] == EMPTY){
-                    playerY = playerY+1
-                    screen[playerY-1][playerX] = EMPTY
-                }
-                Keys.A -> if (screen[playerY][playerX-1] == EMPTY){
-                    playerX = playerX-1
-                    screen[playerY][playerX+1] = EMPTY
-                }
-                Keys.D -> if (screen[playerY][playerX+1] == EMPTY){
-                    playerX = playerX+1
-                    screen[playerY][playerX-1] = EMPTY
-                }
-
-            }
-            //Draws to player to its coordinates
-            screen[playerY][playerX] = PLAYER
-        }
-    }
 }
 
+
 fun generateMaze(screen:LiveList<LiveList<String>> ){
-    repeat(100){
+    repeat(400){
         val randomY = Random.nextInt(1, SCREENHEIGHT+1)
         val randomX = Random.nextInt(1, SCREENWIDTH+1)
         if (screen[randomY][randomX] == EMPTY) {
@@ -118,9 +123,25 @@ fun generateMaze(screen:LiveList<LiveList<String>> ){
     }
 }
 
-fun placePlayer(screen: LiveList<LiveList<String>>):Pair<Int,Int>{
-    val playerX = Random.nextInt(1, SCREENWIDTH+1)
-    val playerY = SCREENHEIGHT
+fun placePlayer(screen: LiveList<LiveList<String>>){
+    playerX = Random.nextInt(1, SCREENWIDTH+1)
+    playerY = SCREENHEIGHT
     screen[playerY][playerX] = PLAYER
-    return Pair(playerY,playerX)
+}
+
+fun placeDoor(screen: LiveList<LiveList<String>>):Pair<Int,Int>{
+    val doorX = Random.nextInt(1, SCREENWIDTH+1)
+    val doorY = 1
+    screen[doorY][doorX] = DOOR
+    return Pair(doorY,doorX)
+}
+
+fun movePlayer(screen: LiveList<LiveList<String>>, moveX:Int, moveY:Int) {
+
+    if (screen[moveY][moveX] == EMPTY) {
+        screen[playerY][playerX] = EMPTY
+        playerY = moveY
+        playerX = moveX
+    }
+
 }
