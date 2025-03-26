@@ -22,12 +22,14 @@ import com.varabyte.kotter.foundation.text.*
 import com.varabyte.kotter.foundation.collections.liveListOf
 import com.varabyte.kotter.foundation.timer.*
 import com.varabyte.kotter.runtime.Session
+import kotlin.concurrent.timer
 import kotlin.random.Random
 
 //Constant variable declarations
 const val SCREENHEIGHT = 30
 const val SCREENWIDTH = 30
-const val EMPTY = "  "
+const val EMPTYTILE = "E "
+const val FLOOR = "  "
 const val PLAYER = "O "
 const val DOOR = "D "
 const val WALL = "# "
@@ -44,8 +46,8 @@ fun main() = session {
     //Builds the screen
     buildScreen(screen=screen)
     //Builds the maze and adds the player to the bottom and the door to the top
-    generateMaze(screen=screen)
     placePlayer(screen=screen)
+    generateMaze(screen=screen)
     var (doorY,doorX) = placeDoor(screen=screen)
 
     section {
@@ -89,7 +91,7 @@ fun Session.buildScreen(screen: LiveList<LiveList<String>>){
         //For each row, creates the edge wall and fills in the interior with empty tiles
         screen.add(liveListOf(WALL))
         repeat(SCREENWIDTH){
-            screen[xCount].add(EMPTY)
+            screen[xCount].add(EMPTYTILE)
         }
         screen[xCount].add(WALL)
         xCount++
@@ -100,20 +102,79 @@ fun Session.buildScreen(screen: LiveList<LiveList<String>>){
 }
 
 
-fun generateMaze(screen:LiveList<LiveList<String>> ){
+fun Session.generateMaze(screen:LiveList<LiveList<String>> ){
     /**
      * Maze Generation Script
      */
 
     //NEEDS TO BE REWROTE
-    repeat(400){
-        val randomY = Random.nextInt(1, SCREENHEIGHT+1)
-        val randomX = Random.nextInt(1, SCREENWIDTH+1)
-        if (screen[randomY][randomX] == EMPTY) {
-            screen[randomY][randomX] = WALL
+    //Use a cell visiting system
+    //Goes to empty neighbouring cells, if none backtracks until there is none
+    //If no empty cells left then maze it generated
+    var mazeBuilt = false
+    var mazeHeaderY = playerY
+    var mazeHeaderX = playerX
+    var failCounter = 0
+    while (true) {
+        val pickDirection = Random.nextInt(1, 5)
+        var attemptedMoveY = mazeHeaderY
+        var attemptedMoveX = mazeHeaderX
+        var wallPlacement = 0
+        println(pickDirection)
+        when (pickDirection) {
+            1 -> {
+                attemptedMoveY++
+                wallPlacement = 0
+            }
+            2 -> {
+                attemptedMoveY--
+                wallPlacement = 0
+            }
+            3 -> {
+                attemptedMoveX++
+                wallPlacement = 1
+            }
+            4 -> {
+                attemptedMoveX--
+                wallPlacement = 1
+            }
+        }
+        if (attemptedMoveY in 1..SCREENHEIGHT && attemptedMoveX in 1..SCREENWIDTH) {
+            if (screen[attemptedMoveY][attemptedMoveX] == EMPTYTILE){
+                mazeHeaderY = attemptedMoveY
+                mazeHeaderX = attemptedMoveX
+                screen[attemptedMoveY][attemptedMoveX] = FLOOR
+                if (wallPlacement == 1){
+                    try {
+                        if (screen[attemptedMoveY][attemptedMoveX+1] ==  EMPTYTILE){
+                            screen[attemptedMoveY][attemptedMoveX+1] = WALL
+                        }
+
+                    } catch (e: Exception){
+                        break
+                    }
+
+                }else{
+                    try {
+                        if (screen[attemptedMoveY+1][attemptedMoveX] == EMPTYTILE){
+                            screen[attemptedMoveY+1][attemptedMoveX] = WALL
+                        }
+
+                    } catch (e: Exception){
+                        break
+                    }
+                }
+
+            }
+            else{ failCounter++ }
+
+            if (failCounter == 100000){
+                break
+            }
         }
 
     }
+
 }
 
 fun placePlayer(screen: LiveList<LiveList<String>>){
@@ -136,13 +197,13 @@ fun placeDoor(screen: LiveList<LiveList<String>>):Pair<Int,Int>{
 fun movePlayer(screen: LiveList<LiveList<String>>, moveX:Int, moveY:Int):Boolean {
     if (moveY in 1..SCREENHEIGHT) {
         //If the passed coordinates are an empty tile, sets the player there and redraws the old tile
-        if (screen[moveY][moveX] == EMPTY) {
-            screen[playerY][playerX] = EMPTY
+        if (screen[moveY][moveX] == FLOOR) {
+            screen[playerY][playerX] = FLOOR
             playerY = moveY
             playerX = moveX
         } else if (screen[moveY][moveX] == DOOR) {
             //Clears the player from the screen and returns true, triggering the win condition
-            screen[playerY][playerX] = EMPTY
+            screen[playerY][playerX] = FLOOR
             return true
         }
     }
