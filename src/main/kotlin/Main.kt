@@ -102,7 +102,7 @@ fun Session.buildScreen(screen: LiveList<LiveList<String>>){
 }
 
 
-fun Session.generateMaze(screen:LiveList<LiveList<String>> ){
+fun Session.generateMaze(screen:LiveList<LiveList<String>> ) {
     /**
      * Maze Generation Script
      */
@@ -112,69 +112,110 @@ fun Session.generateMaze(screen:LiveList<LiveList<String>> ){
     //Goes to empty neighbouring cells, if none backtracks until there is none
     //If no empty cells left then maze it generated
     var mazeBuilt = false
+    var randomStart = false
     var mazeHeaderY = playerY
     var mazeHeaderX = playerX
-    var failCounter = 0
-    while (true) {
-        val pickDirection = Random.nextInt(1, 5)
-        var attemptedMoveY = mazeHeaderY
-        var attemptedMoveX = mazeHeaderX
-        var wallPlacement = 0
-        println(pickDirection)
-        when (pickDirection) {
-            1 -> {
-                attemptedMoveY++
-                wallPlacement = 0
-            }
-            2 -> {
-                attemptedMoveY--
-                wallPlacement = 0
-            }
-            3 -> {
-                attemptedMoveX++
-                wallPlacement = 1
-            }
-            4 -> {
-                attemptedMoveX--
-                wallPlacement = 1
+    while (screen[1].contains(EMPTYTILE)) {
+        if (randomStart) {
+            var foundTile = false
+            while (!foundTile) {
+                for (screenY in screen) {
+                    for (screenX in screenY) {
+                        if (screenX == EMPTYTILE) {
+                            mazeHeaderY = screen.indexOf(screenY)
+                            mazeHeaderX = screen[mazeHeaderY].indexOf(screenX)
+                            println("$mazeHeaderX , $mazeHeaderY")
+                            screen[mazeHeaderY][mazeHeaderX] = FLOOR
+                            foundTile = true
+                            break
+                        }
+                    }
+                    if (foundTile) {
+                        break
+                    }
+                    println("Running Through")
+                }
             }
         }
-        if (attemptedMoveY in 1..SCREENHEIGHT && attemptedMoveX in 1..SCREENWIDTH) {
-            if (screen[attemptedMoveY][attemptedMoveX] == EMPTYTILE){
-                mazeHeaderY = attemptedMoveY
-                mazeHeaderX = attemptedMoveX
-                screen[attemptedMoveY][attemptedMoveX] = FLOOR
-                if (wallPlacement == 1){
-                    try {
-                        if (screen[attemptedMoveY][attemptedMoveX+1] ==  EMPTYTILE){
-                            screen[attemptedMoveY][attemptedMoveX+1] = WALL
-                        }
+        println("Attempting Path")
+        var failCounter = 0
+        while (true) {
 
-                    } catch (e: Exception){
-                        break
-                    }
+            val pickDirection = Random.nextInt(1, 5)
+            var attemptedMoveY = mazeHeaderY
+            var attemptedMoveX = mazeHeaderX
 
-                }else{
-                    try {
-                        if (screen[attemptedMoveY+1][attemptedMoveX] == EMPTYTILE){
-                            screen[attemptedMoveY+1][attemptedMoveX] = WALL
-                        }
+            var wallPlacement = 0
+            //println()
+            //println()
+            for (screenY in screen) {
+                for (screenX in screenY) {
+                    //print(screenX)
+                }
+                //println()
+            }
 
-                    } catch (e: Exception){
-                        break
-                    }
+            when (pickDirection) {
+                1 -> {
+                    attemptedMoveY++
+                    wallPlacement = 0
+                }
+
+                2 -> {
+                    attemptedMoveY--
+                    wallPlacement = 0
+                }
+
+                3 -> {
+                    attemptedMoveX++
+                    wallPlacement = 1
+                }
+
+                4 -> {
+                    attemptedMoveX--
+                    wallPlacement = 1
                 }
 
             }
-            else{ failCounter++ }
+            if (attemptedMoveY in 1..SCREENHEIGHT && attemptedMoveX in 1..SCREENWIDTH) {
 
-            if (failCounter == 100000){
-                break
+                if (screen[attemptedMoveY][attemptedMoveX] == EMPTYTILE) {
+                    mazeHeaderY = attemptedMoveY
+                    mazeHeaderX = attemptedMoveX
+                    screen[attemptedMoveY][attemptedMoveX] = FLOOR
+                    if (wallPlacement == 1) {
+                        try {
+                            if (screen[attemptedMoveY][attemptedMoveX + 1] == EMPTYTILE) {
+                                screen[attemptedMoveY][attemptedMoveX + 1] = WALL
+                            }
+                        } catch (e: Exception) {
+                            break
+                        }
+                    } else {
+                        try {
+                            if (screen[attemptedMoveY + 1][attemptedMoveX] == EMPTYTILE) {
+                                screen[attemptedMoveY + 1][attemptedMoveX] = WALL
+                            }
+
+                        } catch (e: Exception) {
+                            break
+                        }
+                    }
+
+                } else {
+                    failCounter++
+                }
+
+                if (failCounter == 1000) {
+                    println("Failed")
+                    randomStart = true
+                    break
+                }
             }
+
         }
 
     }
-
 }
 
 fun placePlayer(screen: LiveList<LiveList<String>>){
