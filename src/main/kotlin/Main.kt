@@ -30,7 +30,7 @@ const val SCREENHEIGHT = 30
 const val SCREENWIDTH = 30
 const val EMPTYTILE = "E "
 const val FLOOR = "  "
-const val BRANCH = "* "
+const val BRANCH = "  "
 const val PLAYER = "O "
 const val DOOR = "D "
 const val WALL = "# "
@@ -107,11 +107,6 @@ fun Session.generateMaze(screen:LiveList<LiveList<String>> ) {
     /**
      * Maze Generation Script
      */
-
-    //NEEDS TO BE REWROTE
-    //Use a cell visiting system
-    //Goes to empty neighbouring cells, if none backtracks until there is none
-    //If no empty cells left then maze it generated
     var mazeBuilt = false
     var randomStart = false
     var mazeHeaderY = playerY
@@ -130,97 +125,74 @@ fun Session.generateMaze(screen:LiveList<LiveList<String>> ) {
         if (!foundEmpty) {
             mazeBuilt = true
         }
-
         if (randomStart) {
-
-            /**
+            val randomEmptyTile = mutableListOf<Pair<Int,Int>>()
             for (screenY in 1..SCREENHEIGHT) {
-            for (screenX in 1..SCREENWIDTH) {
-            if (screen[screenY][screenX] == FLOOR) {
-            tileList.add(Pair(screenY, screenX))
+                for (screenX in 1..SCREENWIDTH) {
+                    if (screen[screenY][screenX] == EMPTYTILE) {
+                        randomEmptyTile.add(Pair(screenY, screenX))
+
+                    }
+                }
             }
-            }
-            }
-             */
+            try {
+                tileList.add(randomEmptyTile[Random.nextInt(tileList.size)])
+            }catch (e:Exception){}
             try {
                 val randomTile = tileList[Random.nextInt(tileList.size)]
                 tileList.remove(randomTile)
                 mazeHeaderY = randomTile.first
                 mazeHeaderX = randomTile.second
                 screen[mazeHeaderY][mazeHeaderX] = BRANCH
-                println(tileList.size)
-                println("$mazeHeaderX,$mazeHeaderY")
-            } catch (e: Exception) {
-                mazeBuilt = true
-            }
+            } catch (e: Exception) { }
         }
 
-
-        println("Attempting Path")
         var failCounter = 0
         while (true) {
-
             val pickDirection = Random.nextInt(1, 5)
             var attemptedMoveY = mazeHeaderY
             var attemptedMoveX = mazeHeaderX
-
             var wallPlacement = 0
-            //println()
-            //println()
-            for (screenY in screen) {
-                for (screenX in screenY) {
-                    //print(screenX)
-                }
-                //println()
-            }
 
             when (pickDirection) {
                 1 -> {
                     attemptedMoveY++
                     wallPlacement = 1
                 }
-
                 2 -> {
                     attemptedMoveY--
                     wallPlacement = 1
                 }
-
                 3 -> {
                     attemptedMoveX++
                     wallPlacement = 0
                 }
-
                 4 -> {
                     attemptedMoveX--
                     wallPlacement = 0
                 }
-
             }
             if (attemptedMoveY in 1..SCREENHEIGHT && attemptedMoveX in 1..SCREENWIDTH) {
-
                 if (screen[attemptedMoveY][attemptedMoveX] == EMPTYTILE) {
                     mazeHeaderY = attemptedMoveY
                     mazeHeaderX = attemptedMoveX
                     screen[attemptedMoveY][attemptedMoveX] = FLOOR
                     if (wallPlacement == 1) {
-                        buildWall1(screen, attemptedMoveY, attemptedMoveX, tileList)
+                        buildWall(screen, pickDirection, attemptedMoveY, attemptedMoveX, tileList)
                     } else {
-                        buildWall2(screen, attemptedMoveY, attemptedMoveX, tileList)
+                        buildWall(screen, pickDirection, attemptedMoveY, attemptedMoveX, tileList)
                     }
-
                 } else {
                     failCounter++
                 }
-
                 if (failCounter == 1000) {
-                    println("Failed")
                     randomStart = true
                     break
                 }
             }
 
         }
-
+        screen[playerY][playerX] = PLAYER
     }
 }
 
@@ -259,88 +231,55 @@ fun movePlayer(screen: LiveList<LiveList<String>>, moveX:Int, moveY:Int):Boolean
     return false
 }
 
-fun buildWall1(screen: LiveList<LiveList<String>>, posY: Int, posX: Int, tileList : MutableList<Pair<Int,Int>>) {
+fun checkCoordinate(pos:Pair<Int,Int>):Boolean{
+    var (posY, posX) = pos
+    if (posY in 1..SCREENHEIGHT && posX in 1..SCREENWIDTH) {
+        return true
+    }
+    return false
+}
+
+fun buildWall(screen: LiveList<LiveList<String>>,direction:Int, posY: Int, posX: Int, tileList : MutableList<Pair<Int,Int>>) {
     when (Random.nextInt(1,8)) {
         1 , 2, 3, 4, 5 -> {
-            try {
-                if (screen[posY][posX + 1] == EMPTYTILE) {
-                    screen[posY][posX + 1] = WALL
-                }
-                if (screen[posY][posX - 1] == EMPTYTILE) {
-                    screen[posY][posX - 1] = WALL
-                }
-            } catch (e: Exception) {
-                println()
+            if (direction == 1) {
+                doubleWall(screen, Pair(posY, posX), Pair(0, 1))
+            } else {
+                doubleWall(screen, Pair(posY, posX), Pair(1, 0))
             }
         }
         6 -> {
-            try {
+            if (checkCoordinate(Pair(posY, posX+1))){
                 if (screen[posY][posX + 1] == EMPTYTILE) {
                     screen[posY][posX + 1] = WALL
                 }
-            } catch (e: Exception) {
-                println()
             }
-            tileList.add(Pair(posY, posX - 1))
-            //try {
-            //    screen[posY][posX - 1] = BRANCH
-            //} catch (e: Exception) {}
+            if (checkCoordinate(Pair(posY, posX-1))) {
+                tileList.add(Pair(posY, posX - 1))
+            }
         }
         7 -> {
-            try {
+            if (checkCoordinate(Pair(posY, posX-1))){
                 if (screen[posY][posX - 1] == EMPTYTILE) {
                     screen[posY][posX - 1] = WALL
                 }
-            } catch (e: Exception) {
-                println()
             }
-            tileList.add(Pair(posY, posX + 1))
-            //try {
-            //    screen[posY][posX + 1] = BRANCH
-            //}  catch (e: Exception) {}
+            if (checkCoordinate(Pair(posY, posX + 1))) {
+                tileList.add(Pair(posY, posX + 1))
+            }
         }
     }
 }
 
-fun buildWall2(screen: LiveList<LiveList<String>>, posY: Int, posX: Int, tileList : MutableList<Pair<Int,Int>>) {
-    when (Random.nextInt(1,8)) {
-        1 , 2, 3, 4, 5 -> {
-            try {
-                if (screen[posY  + 1][posX] == EMPTYTILE) {
-                    screen[posY  + 1][posX] = WALL
-                }
-                if (screen[posY - 1][posX] == EMPTYTILE) {
-                    screen[posY - 1][posX] = WALL
-                }
-            } catch (e: Exception) {
-                println()
-            }
+fun doubleWall(screen: LiveList<LiveList<String>>, pos:Pair<Int,Int>, side:Pair<Int,Int>){
+    val (posY, posX) = pos
+    val (sideY, sideX) = side
+    if (checkCoordinate(Pair(posY + sideY, posX + sideX)) && checkCoordinate(Pair(posY - sideY, posX - sideX))) {
+        if (screen[posY + sideY][posX + sideX] == EMPTYTILE) {
+            screen[posY + sideY][posX + sideX] = WALL
         }
-        6 -> {
-            try {
-                if (screen[posY + 1][posX] == EMPTYTILE) {
-                    screen[posY + 1][posX] = WALL
-                }
-            } catch (e: Exception) {
-                println()
-            }
-            tileList.add(Pair(posY -1 , posX))
-            //try {
-            //    screen[posY + 1][posX] = BRANCH
-            //}catch (e:Exception){}
-        }
-        7 -> {
-            try {
-                if (screen[posY - 1][posX] == EMPTYTILE) {
-                    screen[posY - 1][posX] = WALL
-                }
-            } catch (e: Exception) {
-                println()
-            }
-            tileList.add(Pair(posY + 1, posX))
-            //try {
-            //    screen[posY - 1][posX] = BRANCH
-            //}catch (e:Exception){}
+        if (screen[posY - sideY][posX - sideX] == EMPTYTILE) {
+            screen[posY - sideY][posX - sideX] = WALL
         }
     }
 }
