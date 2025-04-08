@@ -32,31 +32,34 @@ I added a check to see if the index was valid before attempting to even move to 
 I currently have a simple maze generation script to place walls randomly inside the play area, this system does not work well as it was not always winnable, with the door and player being able to spawn in closed off areas.
 
 ![OldMazeCode.png](screenshots/OldMazeCode.png)
-
-
----
-
-## Date: xx/xx/20xx
-
-Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes.
-
-![example.png](screenshots/example.png)
+I need to rewrite this code to procedurally generate a maze that can be navigated.
 
 ---
 
-## Date: xx/xx/20xx
+## Date: 7/04/2025
+I rewrote the function for generating the maze, it now creates corridors with branching paths and **should** be solveable every time.
+This new system looks and acts how a real maze should and the generation system used for it is based off the 'recursive backtracker' algorithm used in maze generation, it is not perfect, and sometimes creates small pockets that cannot be accessed, but it it rare.
 
-Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes.
-
-![example.png](screenshots/example.png)
+![MazeGenNew.png](screenshots/MazeGenNew.png)
 
 ---
 
-## Date: xx/xx/20xx
+## Date: 4/04/2025
 
-Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes. Example description and notes.
+Fixed an error that was causing branches to be generated on the border wall, allowing the player to move out of bounds, and moving to an invalid index of the screens 2D array.
 
-![example.png](screenshots/example.png)
+I added more checking to the wall generation on the Branches, to stop this from occuring, keeping the player restrained to valid indexes.
+![BorderCheck.png](screenshots/BorderCheck.png)
+
+---
+
+## Date: 7/04/2025
+
+Added a start screen to the terminal, so that it gives the user feedback on what is occuring in the program. Otherwise it would be producing a blank screen, that would make users confused and think the program doesn't work. The loading screen also has the controls so the user knows how to play the game.
+
+![LoadingFeedback.png](screenshots/LoadingFeedback.png)
+Also added a win condition at the end of the game.
+![Win condition.png](screenshots/Win%20condition.png)
 
 ---
 

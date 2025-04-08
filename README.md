@@ -10,7 +10,6 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 - Modifying data stored in collections
 - Storing multi-dimensional data in collections
 - Creating functions that use parameters and/or return values
-- Using non-trivial string manipulation
 - Using additional non-core libraries
 
 
