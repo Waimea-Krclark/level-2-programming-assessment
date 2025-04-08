@@ -57,6 +57,8 @@ fun main() = session {
         //Displays if maze is not built
         if(!mazeBuilt){
             bold{yellow{textLine("Building Maze$buildAnim Please wait")}}
+            textLine("===========================================")
+            bold{textLine("How to Play:")}
             green{textLine("W: Move Up, S: Move Down, A: Move Left, D: Move Right")}
         }
 
@@ -124,9 +126,13 @@ fun main() = session {
     //Win condition section
     section {
         colorAnim(this)
+        textLine("===================")
         bold{textLine("### $winAnim ###")}
+        textLine("===================")
         textLine()
         white{textLine("You have escaped the maze!")}
+        textLine()
+        white{textLine("----------------")}
         textLine()
         white{textLine("Press any key to Exit")}
     //On key press, signals the terminal to stop, and exits the program
