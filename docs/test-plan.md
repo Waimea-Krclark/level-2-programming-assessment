@@ -10,6 +10,21 @@ Terminology:
 
 ---
 
+## Screen building
+
+I am going to test the screen setup in the beginning, to see if it dynamically creates a screen at the correct resolution, with it being a 2D array so i can easily access and edit any part of the screen
+
+### Test Data To Use
+
+The data I am using is the Constants for the screen size, SCREENHEIGHT and SCREENWIDTH, these will determine the resolution of the screen. A 2D array with of the actual screen will be used as well to actually build the play area in. The screen setup function needs to be run to build the screen.
+I will try different values for the resolution to see if it generates correctly at any size.
+
+### Expected Test Result
+
+I expect my program to build the screen dynamically based on the parameters given, and it should also not attempt to place anything out od bounds of the array, with all indexes being valid 2D coordinates so can be referenced later easily using screen[y][x].
+
+---
+
 ## Maze Generation Testing
 
 I am going to test the maze generation to see the reliability of my system for procedurally generating a maze that the player can navigate and reach the end.

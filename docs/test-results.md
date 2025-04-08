@@ -4,6 +4,24 @@ The test results show the actual outcome of the testing, following the [Test Pla
 
 ---
 
+## Screen building
+
+I tested the screen setup in the beginning of the script, to see if it dynamically creates a screen at the correct resolution, with it being a 2D array so I can easily access and edit any part of the screen. I tried different values for the screen size constants (SCREENHEIGHT, SCREENWIDTH) to see if it worked at any size without errors or invalid indexes
+
+### Test Data Used
+
+The data I am using is the Constants for the screen size, SCREENHEIGHT and SCREENWIDTH, these will determine the resolution of the screen. A 2D array with of the actual screen will be used as well to actually build the play area in. The screen setup function needs to be run to build the screen.
+
+
+### Test Result
+
+![MazeSize.png](screenshots/MazeSize.png)
+Different maze sizes ^
+
+Changing the maze size did not break the screen, with it always generating correctly at the set resolution. Having rectangles instead of squares also worked, and there was no generation out of bounds, with it only building inside the 2D array of the screen. The border wall it generates around the outside also worked well at any size. Each character has a Y and X index, allowing them to be easily referenced or replaced.
+
+---
+
 ## Maze Generation Testing
 
 I tested the maze generation to see the reliability of my system for procedurally generating a maze that the player can navigate and reach the end.

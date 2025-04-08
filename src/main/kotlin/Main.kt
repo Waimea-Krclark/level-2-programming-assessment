@@ -118,7 +118,7 @@ fun main() = session {
     }
     //Setup text animation and colour animation
     val winAnim = textAnimOf(listOf("!~~ WIN ~~!", "~!~ WIN ~!~", "~~! WIN !~~", "~!~ WIN ~!~"),100.milliseconds)
-    val colorAnim = renderAnimOf(Color.entries.size, 250.milliseconds) { i ->
+    val colorAnim = renderAnimOf(Color.entries.size, 400.milliseconds) { i ->
         if (Color.entries[i] != Color.BLACK) {
             color(Color.entries[i])
         }
