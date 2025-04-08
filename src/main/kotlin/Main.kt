@@ -43,6 +43,10 @@ var mazeBuilt = false
 
 //Main Function
 fun main() = session {
+    /**
+     * This project uses Kotter, which is a kotlin terminal gui library.
+     * This allows me to do more with my code like consuming input, live updating, animations and colour.
+     */
     //Live Lists are a Kotter Collection that allows for the list to be updated without having to rerender the terminal
     //Live list of a Live list to create a 2D array that can be used with array[Y][X]
     val screen = liveListOf<LiveList<String>>()
@@ -109,7 +113,6 @@ fun main() = session {
                 }
             }
         }
-
     }
     //Setup text animation and colour animation
     val winAnim = textAnimOf(listOf("!~~ WIN ~~!", "~!~ WIN ~!~", "~~! WIN !~~", "~!~ WIN ~!~"),100.milliseconds)
@@ -157,7 +160,7 @@ fun generateMaze(screen:LiveList<LiveList<String>> ) {
     /**
      *  ----- Maze Generation Script -----
      * Uses a system based off the recursive backtracking maze generation algorithm,
-     * but is not the same, using different means to achieve a navigateable maze.
+     * but is not the same, using different means to achieve a navigable maze.
      */
     var mazeBuilt = false
     var randomStart = false
@@ -217,18 +220,10 @@ fun generateMaze(screen:LiveList<LiveList<String>> ) {
 
             //Random direction
             when (pickDirection) {
-                1 -> {
-                    attemptedMoveY++
-                }
-                2 -> {
-                    attemptedMoveY--
-                }
-                3 -> {
-                    attemptedMoveX++
-                }
-                4 -> {
-                    attemptedMoveX--
-                }
+                1 -> attemptedMoveY++
+                2 -> attemptedMoveY--
+                3 -> attemptedMoveX++
+                4 -> attemptedMoveX--
             }
             //If the suggested move is a valid coordinate
             if (attemptedMoveY in 1..SCREENHEIGHT && attemptedMoveX in 1..SCREENWIDTH) {
@@ -248,7 +243,6 @@ fun generateMaze(screen:LiveList<LiveList<String>> ) {
                     break
                 }
             }
-
         }
         //Draw player
         screen[playerY][playerX] = PLAYER
@@ -297,11 +291,11 @@ fun checkCoordinate(pos:Pair<Int,Int>):Boolean{
     return posY in 1..SCREENHEIGHT && posX in 1..SCREENWIDTH
 }
 
-fun buildWall(screen: LiveList<LiveList<String>>,direction:Int, posY: Int, posX: Int, tileList : MutableList<Pair<Int,Int>>) {
+fun buildWall(screen: LiveList<LiveList<String>>,direction:Int, posY: Int, posX: Int, tileList: MutableList<Pair<Int,Int>>) {
     // Random wall types, larger bias toward building hallways
     when (Random.nextInt(1,8)) {
         1, 2, 3, 4, 5 -> {
-            // Hallway the values in the pair determine the direction of the hallway
+            // Hallway. The values in the pair determine the direction of the hallway
             if (direction == 1) {
                 doubleWall(screen, Pair(posY, posX), Pair(0, 1))
             } else {

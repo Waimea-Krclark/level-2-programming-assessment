@@ -18,7 +18,7 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 
 ## Project Files
 
-- Program source code can be found in the [src](src/main/kotlin) folder
+- Program source code can be found in the [src/main/kotlin](src/main/kotlin) folder
 - Program test plan is in [test-plan.md](docs/test-plan.md) in the docs folder
 - Program test evidence is in [test-results.md](docs/test-results.md) in the docs folder
 
@@ -26,7 +26,7 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 
 ## Project Description
 
-Maze game is a game about navigating a procedurally generated maze to reach the exit. It is a top down game where the player controls the character (@) using WASD. When the player reaches the exit door (D) a win condition is triggered.
+Maze game is a game about navigating a procedurally generated maze to reach the exit. It is a top down game where the player controls the character (O) using WASD. When the player reaches the exit door (D) a win condition is triggered.
 
 
 

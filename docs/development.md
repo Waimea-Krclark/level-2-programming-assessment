@@ -59,7 +59,7 @@ Added a start screen to the terminal, so that it gives the user feedback on what
 
 ![LoadingFeedback.png](screenshots/LoadingFeedback.png)
 Also added a win condition at the end of the game.
-![Win condition.png](screenshots/Win%20condition.png)
+![WinCondition.png](screenshots/WinCondition.png)
 
 ---
 
