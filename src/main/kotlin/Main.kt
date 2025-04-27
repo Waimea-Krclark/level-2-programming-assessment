@@ -41,11 +41,13 @@ var playerY = 0
 var playerX = 0
 var mazeBuilt = false
 
-//Main Function
+//Main body function - runs setup and game loop
 fun main() = session {
     /**
      * This project uses Kotter, which is a kotlin terminal gui library.
      * This allows me to do more with my code like consuming input, live updating, animations and colour.
+     *
+     * Main function builds the screen, then the maze, and adds the player and the door before running the main game loop for player movement
      */
     //Live Lists are a Kotter Collection that allows for the list to be updated without having to rerender the terminal
     //Live list of a Live list to create a 2D array that can be used with array[Y][X]
@@ -60,6 +62,7 @@ fun main() = session {
             textLine("===========================================")
             bold{textLine("How to Play:")}
             green{textLine("W: Move Up, S: Move Down, A: Move Left, D: Move Right")}
+            green{textLine("Reach the door (D) to win!")}
         }
 
     }.runUntilSignal { //Builds the screen
@@ -91,6 +94,7 @@ fun main() = session {
         var reachedDoor = false
         //Movement script
         onKeyPressed {
+            //On any of these keys pressed, will run the move function which will attempt to move the player
             if (!reachedDoor){
                 when(key) {
                     Keys.W -> reachedDoor = movePlayer(screen = screen, moveX = playerX, moveY = playerY - 1)
@@ -108,7 +112,7 @@ fun main() = session {
                             }
                             else{
                                 screen.clear()
-                                signal()
+                                signal() // Signals the end, stopping the loop and allowing the program to move to the next section
                             }
                         }
                     }
@@ -142,9 +146,11 @@ fun main() = session {
             signal()
         }
     }
+    //Exits the programs
     exitProcess(0)
 }
 
+//Creates the screen at the determined resolution
 fun Session.buildScreen(screen: LiveList<LiveList<String>>){
     //Create top boundary
     screen.add(liveListOf(WALL + WALL.repeat(SCREENWIDTH) + WALL))
@@ -255,6 +261,79 @@ fun generateMaze(screen:LiveList<LiveList<String>> ) {
     }
 }
 
+
+fun buildWall(screen: LiveList<LiveList<String>>,direction:Int, posY: Int, posX: Int, tileList: MutableList<Pair<Int,Int>>) {
+    /**
+     * Determines how a wall should be placed based off parameters like position and direction.
+     */
+    // Random wall types, larger bias toward building hallways
+    when (Random.nextInt(1,8)) {
+        1, 2, 3, 4, 5 -> {
+            // Hallway. The values in the pair determine the direction of the hallway
+            if (direction == 1) {
+                doubleWall(screen, Pair(posY, posX), Pair(0, 1))
+            } else {
+                doubleWall(screen, Pair(posY, posX), Pair(1, 0))
+            }
+        }
+        6 -> {
+            // Branching hallway type 1
+            if (direction == 1) {
+                singleWall(screen, Pair(posY, posX), Pair(0, 1), tileList)
+            } else {
+                singleWall(screen, Pair(posY, posX), Pair(1, 0), tileList)
+            }
+        }
+        7 -> {
+            // Branching hallway type 2 (Opposite side)
+            if (direction == 1) {
+                singleWall(screen, Pair(posY, posX), Pair(0, -1), tileList)
+            } else {
+                singleWall(screen, Pair(posY, posX), Pair(-1, 0), tileList)
+            }
+        }
+    }
+}
+
+fun checkCoordinate(pos:Pair<Int,Int>):Boolean{
+    //Checks coordinates before attempting to use them to stop errors
+    val (posY, posX) = pos
+    // If the provided coordinates are valid indexes, then return trues
+    return posY in 1..SCREENHEIGHT && posX in 1..SCREENWIDTH
+}
+
+fun doubleWall(screen: LiveList<LiveList<String>>, pos:Pair<Int,Int>, side:Pair<Int,Int>){
+    //Draws a wall in a "#  #" format (Hallways)
+    val (posY, posX) = pos
+    val (sideY, sideX) = side
+    //Checks if the coordinates are valid
+    if (checkCoordinate(Pair(posY + sideY, posX + sideX)) && checkCoordinate(Pair(posY - sideY, posX - sideX))) {
+        //Draws on either side if empty
+        if (screen[posY + sideY][posX + sideX] == EMPTYTILE) {
+            screen[posY + sideY][posX + sideX] = WALL
+        }
+        if (screen[posY - sideY][posX - sideX] == EMPTYTILE) {
+            screen[posY - sideY][posX - sideX] = WALL
+        }
+    }
+}
+
+fun singleWall(screen: LiveList<LiveList<String>>, pos:Pair<Int,Int>, side:Pair<Int,Int>, tileList: MutableList<Pair<Int, Int>>) {
+    //Draws a branching hallway with one side open for a new path "*  #"
+    val (posY, posX) = pos
+    val (sideY, sideX) = side
+    //Draws a wall on one side
+    if (checkCoordinate(Pair(posY + sideY, posX + sideX))) {
+        if (screen[posY + sideY][posX + sideX] == EMPTYTILE) {
+            screen[posY + sideY][posX + sideX] = WALL
+        }
+    }
+    //Adds a branch point on the other
+    if (checkCoordinate(Pair(posY - sideY, posX - sideX))) {
+        tileList.add(Pair(posY - sideY, posX - sideX))
+    }
+}
+
 fun placePlayer(screen: LiveList<LiveList<String>>){
     //Sets the player's Y coordinate to the bottom of the screen and the X to a random spot on the screen
     playerX = Random.nextInt(1, SCREENWIDTH+1)
@@ -288,73 +367,4 @@ fun movePlayer(screen: LiveList<LiveList<String>>, moveX:Int, moveY:Int):Boolean
     //Draws to player to its coordinates
     screen[playerY][playerX] = PLAYER
     return false
-}
-
-fun checkCoordinate(pos:Pair<Int,Int>):Boolean{
-    //Checks coordinates before attempting to use them to stop errors
-    val (posY, posX) = pos
-    // If the provided coordinates are valid indexes, then return trues
-    return posY in 1..SCREENHEIGHT && posX in 1..SCREENWIDTH
-}
-
-fun buildWall(screen: LiveList<LiveList<String>>,direction:Int, posY: Int, posX: Int, tileList: MutableList<Pair<Int,Int>>) {
-    // Random wall types, larger bias toward building hallways
-    when (Random.nextInt(1,8)) {
-        1, 2, 3, 4, 5 -> {
-            // Hallway. The values in the pair determine the direction of the hallway
-            if (direction == 1) {
-                doubleWall(screen, Pair(posY, posX), Pair(0, 1))
-            } else {
-                doubleWall(screen, Pair(posY, posX), Pair(1, 0))
-            }
-        }
-        6 -> {
-            // Branching hallway type 1
-            if (direction == 1) {
-                singleWall(screen, Pair(posY, posX), Pair(0, 1), tileList)
-            } else {
-                singleWall(screen, Pair(posY, posX), Pair(1, 0), tileList)
-            }
-        }
-        7 -> {
-            // Branching hallway type 2 (Opposite side)
-            if (direction == 1) {
-                singleWall(screen, Pair(posY, posX), Pair(0, -1), tileList)
-            } else {
-                singleWall(screen, Pair(posY, posX), Pair(-1, 0), tileList)
-            }
-        }
-    }
-}
-
-fun doubleWall(screen: LiveList<LiveList<String>>, pos:Pair<Int,Int>, side:Pair<Int,Int>){
-    //Draws a wall in a "#  #" format (Hallways)
-    val (posY, posX) = pos
-    val (sideY, sideX) = side
-    //Checks if the coordinates are valid
-    if (checkCoordinate(Pair(posY + sideY, posX + sideX)) && checkCoordinate(Pair(posY - sideY, posX - sideX))) {
-        //Draws on either side if empty
-        if (screen[posY + sideY][posX + sideX] == EMPTYTILE) {
-            screen[posY + sideY][posX + sideX] = WALL
-        }
-        if (screen[posY - sideY][posX - sideX] == EMPTYTILE) {
-            screen[posY - sideY][posX - sideX] = WALL
-        }
-    }
-}
-
-fun singleWall(screen: LiveList<LiveList<String>>, pos:Pair<Int,Int>, side:Pair<Int,Int>, tileList: MutableList<Pair<Int, Int>>){
-    //Draws a branching hallway with one side open for a new path "*  #"
-    val (posY, posX) = pos
-    val (sideY, sideX) = side
-    //Draws a wall on one side
-    if (checkCoordinate(Pair(posY + sideY, posX+sideX))){
-        if (screen[posY + sideY][posX + sideX] == EMPTYTILE) {
-            screen[posY + sideY][posX + sideX] = WALL
-        }
-    }
-    //Adds a branch point on the other
-    if (checkCoordinate(Pair(posY - sideY, posX- sideX))) {
-        tileList.add(Pair(posY - sideY, posX - sideX))
-    }
 }

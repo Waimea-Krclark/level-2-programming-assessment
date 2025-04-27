@@ -41,6 +41,20 @@ I expect to see a maze that looks like a typical square maze, that is solveable 
 
 ---
 
+## Error Checking and prevention
+
+I want to test the error checking and prevention for my game in both the maze generation and player movement.
+
+### Test Data To Use
+
+The data to use will be the 2D screen array, constants of the types of tiles, the coordinates where tiles are generated, and the coordinates of the player. The Maze generation and player movements functions will be used.
+
+### Expected Test Result
+
+I expect the maze to generate without throwing errors, and invalid moves with the player to be checked and ignored instead of throwing errors (Attempting to move into walls or out of bounds)
+
+---
+
 ## Example Test Name
 
 Example test description. Example test description. Example test description. Example test description. Example test description. Example test description.
@@ -51,7 +65,7 @@ Details of test data and reasons for selection. Details of test data and reasons
 
 ### Expected Test Result
 
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. 
+Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen.
 
 ---
 
