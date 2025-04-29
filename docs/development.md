@@ -63,4 +63,11 @@ Also added a win condition at the end of the game.
 
 ---
 
+## Date: 29/04/2025
+
+Terminal GUI stopped working, not allowing the project to start, so I added more implementations to the build.gradle.kts file to resolve all the issues it was encountering
+![gradleBuild1.png](screenshots/gradleBuild1.png)
+![gradleBuild2.png](screenshots/gradleBuild2.png)
+---
+
 

@@ -11,7 +11,6 @@
  * =====================================================================
  */
 
-package org.example
 
 //Imports for the Kotter Library
 import com.varabyte.kotter.foundation.*
