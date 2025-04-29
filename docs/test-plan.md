@@ -55,17 +55,17 @@ I expect the maze to generate without throwing errors, and invalid moves with th
 
 ---
 
-## Example Test Name
+## Reaching Door (Win Condition)
 
-Example test description. Example test description. Example test description. Example test description. Example test description. Example test description.
+I am going to test the trigger on the player reaching the exit door which is the win condition of the game.
 
 ### Test Data To Use
 
-Details of test data and reasons for selection. Details of test data and reasons for selection. Details of test data and reasons for selection.
+The position of the door, and the position of the player will be used to determine whether the player has won or not and if the door is reached, the main game loop should end and run on teh the next part of the script which is the win loop.
 
 ### Expected Test Result
 
-Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen. Statement detailing what should happen.
+The door should always generate, and upon reaching it, the player will disappear, the maze will fade and the win loop will be triggered, with an animation that then allows the player to exit on a button press.
 
 ---
 

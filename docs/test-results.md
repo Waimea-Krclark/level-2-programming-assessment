@@ -74,18 +74,18 @@ Maze generation throws no errors, with the program automatically handling out of
 
 ---
 
-## Example Test Name
+## Reaching Door (Win Condition)
 
-Example test description. Example test description.Example test description. Example test description.Example test description. Example test description.
+I tested the win condition of the game, which triggers when the player reaches the exit door.
 
 ### Test Data Used
 
-Details of test data. Details of test data. Details of test data. Details of test data. Details of test data. Details of test data. Details of test data.
+The player position and door position were used, and on moving, it would check if the player was on the same tile as the door, if so then the main game loop ends and the win condition is triggered.
 
 ### Test Result
 
-![example.png](screenshots/example.png)
+![WinCondition.png](screenshots/WinCondition.png)
 
-Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result. Comment on test result.
+The door always generates, and the player touching it causes the game loop to end, the make is wiped and then the win condition is triggered, which runs an animation until the player enters any input to close the game.
 
 ---
