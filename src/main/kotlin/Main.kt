@@ -60,7 +60,7 @@ fun main() = session {
             bold{yellow{textLine("Building Maze$buildAnim Please wait")}}
             textLine("===========================================")
             bold{textLine("How to Play:")}
-            green{textLine("W: Move Up, S: Move Down, A: Move Left, D: Move Right")}
+            green{textLine("W: Move Up, S: Move Down, A: Move Left, D: Move Right, Q: Exit")}
             green{textLine("Reach the door (D) to win!")}
         }
 
@@ -100,6 +100,7 @@ fun main() = session {
                     Keys.S -> reachedDoor = movePlayer(screen = screen, moveX = playerX, moveY = playerY + 1)
                     Keys.A -> reachedDoor = movePlayer(screen = screen, moveX = playerX - 1, moveY = playerY)
                     Keys.D -> reachedDoor = movePlayer(screen = screen, moveX = playerX + 1, moveY = playerY)
+                    Keys.Q -> exitProcess(0)
                 }
                 //Runs when the door is reached by the player, triggering the win condition
                 if (reachedDoor){

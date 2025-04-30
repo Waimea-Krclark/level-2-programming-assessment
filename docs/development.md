@@ -24,6 +24,7 @@ Fixed Code\
 I added a check to see if the index was valid before attempting to even move to prevent any out of bounds errors from occuring due to player movement.
 
 ![MoveBugFixed.png](screenshots/MoveBugFixed.png)
+
 ---
 
 ## Date: 27/03/2025
