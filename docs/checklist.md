@@ -44,7 +44,7 @@ The program has been tested and there is documented evidence that:
 - [x] The game is **fully functional**, showing testing of:
   - [x] game setup
   - [x] player moves
-  - [ ] players taking turns
+  - [x] players taking turns (Player Movement)
   - [ ] scoring (if any)
   - [x] players winning
   - [ ] final feedback (if appropriate)
@@ -111,7 +111,7 @@ The program code:
 ### Program Testing
 
 The program has been tested to be **robust**:
-- [ ] With a **comprehensive and thorough** test plan
+- [x] With a **comprehensive and thorough** test plan
 - [x] Testing **regularly** throughput development, allowing **time for debugging**
 - [x] Using test values that cover **invalid** (unexpected) cases
 - [x] Resulting in a program that **copes appropriately** with invalid inputs
