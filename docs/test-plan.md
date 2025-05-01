@@ -16,8 +16,7 @@ I am going to test the screen setup in the beginning, to see if it dynamically c
 
 ### Test Data To Use
 
-The data I am using is the Constants for the screen size, SCREENHEIGHT and SCREENWIDTH, these will determine the resolution of the screen. A 2D array with of the actual screen will be used as well to actually build the play area in. The screen setup function needs to be run to build the screen.
-I will try different values for the resolution to see if it generates correctly at any size.
+Running the setup for the game multiple times to see how it handles different sizes, resolutions and shapes.
 
 ### Expected Test Result
 
@@ -33,7 +32,7 @@ To do this test I will run my game 10 times to see how well the maze generation 
 
 ### Test Data To Use
 
-The data I am using for this will be the Maze generation function, along with the other functions it uses within. The 2D array variable for the Screen will be used, with the walls and floors needing to be generated in the bounds of this array. Most parts of the script are at least referenced or need to be run to build the maze, excluding on things like player movement and the win conditions.
+Running the game 10 times to see how it generates the maze and how well it does so.
 
 ### Expected Test Result
 
@@ -41,17 +40,31 @@ I expect to see a maze that looks like a typical square maze, that is solveable 
 
 ---
 
-## Error Checking and prevention
+## Boundary Testing
 
-I want to test the error checking and prevention for my game in both the maze generation and player movement.
+I am going to test the maze generator, player actions and other placements to see how my program handles out of bounds data.
 
-### Test Data To Use
+## Test Data To Use
 
-The data to use will be the 2D screen array, constants of the types of tiles, the coordinates where tiles are generated, and the coordinates of the player. The Maze generation and player movements functions will be used.
+Running the program multiple times and trying to move the player out of bounds in different ways, trying this on all 4 of the boundaries.
 
-### Expected Test Result
+## Expected Test Result
 
-I expect the maze to generate without throwing errors, and invalid moves with the player to be checked and ignored instead of throwing errors (Attempting to move into walls or out of bounds)
+I expect that my program will handle these well, not allowing actions that would result in out of bounds data, which would be invalid and throw an error.
+
+---
+
+## Input Error Checking
+
+I am going to test user inputs that are not valid to see how my program handles them.
+
+## Test Data To Use
+
+Trying to enter inputs that are not parts of the game, and try to do invalid actions like moving through walls to see how it is handled.
+
+## Expected Test Result
+
+I am expecting to not encounter any errors with user inputs and think that my program will handle them correctly, ignoring bad inputs.
 
 ---
 
@@ -61,7 +74,7 @@ I am going to test the trigger on the player reaching the exit door which is the
 
 ### Test Data To Use
 
-The position of the door, and the position of the player will be used to determine whether the player has won or not and if the door is reached, the main game loop should end and run on teh the next part of the script which is the win loop.
+I will beat the game multiple times to ensure that the win condition always triggers correctly.
 
 ### Expected Test Result
 

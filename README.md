@@ -21,6 +21,7 @@ The project is written in the [Kotlin](https://kotlinlang.org) programming langu
 - Program source code can be found in the [src/main/kotlin](src/main/kotlin) folder
 - Program test plan is in [test-plan.md](docs/test-plan.md) in the docs folder
 - Program test evidence is in [test-results.md](docs/test-results.md) in the docs folder
+- Build is found in the [build/libs](build/libs) folder
 
 ---
 

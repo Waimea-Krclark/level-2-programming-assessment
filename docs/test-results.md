@@ -10,7 +10,7 @@ I tested the screen setup in the beginning of the script, to see if it dynamical
 
 ### Test Data Used
 
-The data I am using is the Constants for the screen size, SCREENHEIGHT and SCREENWIDTH, these will determine the resolution of the screen. A 2D array with of the actual screen will be used as well to actually build the play area in. The screen setup function needs to be run to build the screen.
+Running the setup for the game multiple times to see how it handles different sizes, resolutions and shapes.
 
 
 ### Test Result
@@ -32,7 +32,7 @@ To do this test I ran my game 10 times to see how well the maze generation algor
 
 ### Test Data Used
 
-The data I am using for this will be the Maze generation function, along with the other functions it uses within. The 2D array variable for the Screen will be used, with the walls and floors needing to be generated in the bounds of this array. Most parts of the script are at least referenced or need to be run to build the maze, excluding on things like player movement and the win conditions.
+Running the game 10 times to see how it generates the maze and how well it does so.
 
 ### Test Result
 
@@ -46,31 +46,56 @@ While doing other testing I got a generation where the player was trapped in a p
 
 ---
 
-## Error Checking and prevention
+## Boundary Testing
 
-I tested both maze generation and player movement to see how it handles invalid data, and incorrect values that would usually throw an error.
+I tested how my program handles the boundaries of the screen 2D array on which the game takes place.
 
-### Test Data Used
+## Test Data Used
 
-I used the functions for maze generation and player movement. The variables used was the 2D array of the screen, the constants for tile types, and the coordinates of the player and tiles.
+Running the program multiple times and trying to move the player out of bounds in different ways, trying this on all 4 of the boundaries.
 
-### Test Result
+
+## Test Result
+
+The maze generation never threw errors when generating around boundaries of the screen, which means that it does not try to generate outside the screen.
 
 ![MazeGenErrorCheck.png](screenshots/MazeGenErrorCheck.png)
 
-Error Checking for maze generation, it makes sure the attempted building spot is valid and an empty tile before it tries to construct the next maze tile. If the attempted move is invalid or is already a generated tile, it will add to a fail counter and attempt a different move, it it fails a certain amount then it will teleport to a new empty tile and try again.
+This is the part of my maze generation code that determines where it will attempt to build next, it checks if the attempted build location is valid and is in the bounds of the screen before trying to build there, stopping it from generating out of bounds. If the attempted move is invalid or is already a generated tile, it will add to a fail counter and attempt a different move, it it fails a certain amount then it will teleport to a new empty tile and try again.
 
 ![CoordsErrorCheck.png](screenshots/CoordsErrorCheck.png)
 
-Function run a lot throughout the script to check if passed through coordinates are valid before attempting to use them, which stops the script from referencing out of bounds data.
+This is another function that is used a lot for checking if the coordinates given are valid and in bounds of the screen. It is called to check before attempting to use the coordinates, which stops out of bounds errors being thrown.
+
+I tried moving the player out of bounds on all 4 boundary walls, and none of them threw an error meaning it is handling the boundaries correctly.
 
 ![PlayerMoveErrorCHeck.png](screenshots/PlayerMoveErrorCHeck.png)
 
-Player Movement, checks if attempted move by user is valid and whether or not it is a standable tile like floors or branch tiles.
+It uses a similar system of checking the coordinates before moving there to stop invalid moves that would crash the game.
 
+---
 
+## Input Error Checking
 
-Maze generation throws no errors, with the program automatically handling out of bounds data, and not attempting to use anything that will throw an error. The player cannot move through walls or out of bounds as the program checks the user's inputs before attempting them to make sure that the user cannot accidentally input the wrong movement and cause errors.
+I tested how my program handled bad user inputs and invalid actions.
+
+## Test Data Used
+
+Trying to enter inputs that are not parts of the game, and try to do invalid actions like moving through walls to see how it is handled.
+
+## Test Result
+
+Entering random keys had no impact on my game, throwing no errors. The input system only checks for inputs that have been set, so entering other inputs will not cause an error and will be ignored. 
+
+![InputChecking.png](screenshots/InputChecking.png)
+
+This is the part of my program which handles user input, as it is only checking fot those 5 Keys, any other input will be ignored and will not Cause errors.
+
+Making invalid actions also is handled well, not allowing users to move through walls.
+
+![PlayerMoveErrorCHeck.png](screenshots/PlayerMoveErrorCHeck.png)
+
+The player movement function checks if the tile type of the attempted move is a floor or branch tile, which can be stood on. If it is not the movement action will not be taken, preventing bad moves.
 
 ---
 
@@ -80,7 +105,7 @@ I tested the win condition of the game, which triggers when the player reaches t
 
 ### Test Data Used
 
-The player position and door position were used, and on moving, it would check if the player was on the same tile as the door, if so then the main game loop ends and the win condition is triggered.
+I beat the game multiple times to ensure that the win condition always triggers correctly.
 
 ### Test Result
 

@@ -69,6 +69,13 @@ Also added a win condition at the end of the game.
 Terminal GUI stopped working, not allowing the project to start, so I added more implementations to the build.gradle.kts file to resolve all the issues it was encountering
 ![gradleBuild1.png](screenshots/gradleBuild1.png)
 ![gradleBuild2.png](screenshots/gradleBuild2.png)
+
+---
+
+## Date: 1/05/2025
+
+Added a Input of Q which allows the player to quit the program at any time, also added this to the tutorial on maze generation
+
 ---
 
 
